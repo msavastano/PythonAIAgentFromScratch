@@ -1,0 +1,25 @@
+body {
+    font-family: sans-serif;
+    margin: 2em;
+}
+
+#research-form {
+    margin-bottom: 2em;
+}
+
+#query {
+    width: 300px;
+    padding: 0.5em;
+    font-size: 1em;
+}
+
+button {
+    padding: 0.5em 1em;
+    font-size: 1em;
+    cursor: pointer;
+}
+
+#response {
+    border: 1px solid #ccc;
+    padding: 1em;
+}

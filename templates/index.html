@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Research Agent</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <h1>Research Agent</h1>
+    <form id="research-form">
+        <input type="text" id="query" name="query" placeholder="Enter your research query">
+        <button type="submit">Research</button>
+    </form>
+    <div id="response"></div>
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>

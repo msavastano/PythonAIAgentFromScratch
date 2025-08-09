@@ -14,7 +14,7 @@ class ResearchResponse(BaseModel):
     summary: str
     sources: list[str]
     tools_used: list[str]
-    
+
 
 llm = ChatAnthropic(model_name="claude-3-5-sonnet-20241022", timeout=60, stop=None)
 parser = PydanticOutputParser(pydantic_object=ResearchResponse)
@@ -25,7 +25,7 @@ prompt = ChatPromptTemplate.from_messages(
             "system",
             """
             You are a research assistant that will help generate a research paper.
-            Answer the user query and use neccessary tools. 
+            Answer the user query and use neccessary tools.
             Wrap the output in this format and provide no other text\n{format_instructions}
             """,
         ),
@@ -43,15 +43,20 @@ agent = create_tool_calling_agent(
 )
 
 agent_executor = AgentExecutor(agent=agent, tools=tools, verbose=True)
-query = input("What can i help you research? ")
-raw_response = agent_executor.invoke({"query": query})
 
-try:
-    output = raw_response.get("output")
-    if output and isinstance(output, list) and len(output) > 0 and "text" in output[0]:
-        structured_response = parser.parse(output[0]["text"])
-        print(structured_response)
-    else:
-        print("Error: No valid output found in response.", "Raw Response - ", raw_response)
-except Exception as e:
-    print("Error parsing response", e, "Raw Response - ", raw_response)
+def run_agent(query: str):
+    raw_response = agent_executor.invoke({"query": query})
+    try:
+        output = raw_response.get("output")
+        if output and isinstance(output, list) and len(output) > 0 and "text" in output[0]:
+            structured_response = parser.parse(output[0]["text"])
+            return structured_response.dict()
+        else:
+            return {"error": "No valid output found in response.", "raw_response": raw_response}
+    except Exception as e:
+        return {"error": f"Error parsing response: {e}", "raw_response": raw_response}
+
+if __name__ == '__main__':
+    query = input("What can i help you research? ")
+    response = run_agent(query)
+    print(response)
