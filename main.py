@@ -16,7 +16,7 @@ class ResearchResponse(BaseModel):
     topic: str
     summary: str
     sources: List[str]
-    tools_used: list[str]
+    tool_details: list
 
 
 # llm = ChatAnthropic(model_name="claude-3-5-sonnet-20241022", timeout=60, stop=None)
@@ -51,7 +51,8 @@ agent = create_tool_calling_agent(
 agent_executor = AgentExecutor(agent=agent, tools=tools, verbose=True)
 
 def run_agent(query: str):
-    raw_response = agent_executor.invoke({"query": query})
+    # Pass an empty chat history for now
+    raw_response = agent_executor.invoke({"query": query, "chat_history": []})
     try:
         output = raw_response.get("output")
         if isinstance(output, list):
@@ -66,11 +67,27 @@ def run_agent(query: str):
         if not isinstance(output, str):
             output = str(output)
 
+        # Extract tool details from intermediate steps
+        tool_details = []
+        if "intermediate_steps" in raw_response:
+            for action, observation in raw_response["intermediate_steps"]:
+                tool_details.append(
+                    {
+                        "tool_name": action.tool,
+                        "tool_input": action.tool_input,
+                        "tool_output": str(observation),
+                    }
+                )
+
         # Find the start of the JSON object and loop until a valid JSON object is found
         start_index = output.find('{')
         while start_index != -1:
             try:
+                # Decode the JSON part of the string
                 json_obj, _ = json.JSONDecoder().raw_decode(output[start_index:])
+                # Add the tool details to the python object
+                json_obj['tool_details'] = tool_details
+                # Re-encode to string to parse with pydantic
                 json_str = json.dumps(json_obj)
                 structured_response = parser.parse(json_str)
                 return structured_response.model_dump()
@@ -79,7 +96,10 @@ def run_agent(query: str):
 
         raise ValueError("No valid JSON object found in the output.")
     except Exception as e:
-        return {"error": f"Error parsing response: {e}", "raw_response": raw_response}
+        serializable_raw_response = {
+            k: str(v) for k, v in raw_response.items()
+        }
+        return {"error": f"Error parsing response: {e}", "raw_response": serializable_raw_response}
 
 if __name__ == '__main__':
     query = input("What can i help you research? ")
