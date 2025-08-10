@@ -5,16 +5,17 @@ from typing import List
 from langchain_anthropic import ChatAnthropic
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.output_parsers import PydanticOutputParser
+from langchain_core.exceptions import OutputParserException
 from langchain.agents import create_tool_calling_agent, AgentExecutor
 from tools import get_tools
 import re
+import json
 
 load_dotenv()
 class ResearchResponse(BaseModel):
     topic: str
     summary: str
     sources: List[str]
-    tools_used: List[str]
     tools_used: list[str]
 
 
@@ -64,8 +65,19 @@ def run_agent(query: str):
             raise ValueError("Agent did not return any output to parse.")
         if not isinstance(output, str):
             output = str(output)
-        structured_response = parser.parse(output)
-        return structured_response.model_dump()
+
+        # Find the start of the JSON object and loop until a valid JSON object is found
+        start_index = output.find('{')
+        while start_index != -1:
+            try:
+                json_obj, _ = json.JSONDecoder().raw_decode(output[start_index:])
+                json_str = json.dumps(json_obj)
+                structured_response = parser.parse(json_str)
+                return structured_response.model_dump()
+            except (json.JSONDecodeError, OutputParserException):
+                start_index = output.find('{', start_index + 1)
+
+        raise ValueError("No valid JSON object found in the output.")
     except Exception as e:
         return {"error": f"Error parsing response: {e}", "raw_response": raw_response}
 
