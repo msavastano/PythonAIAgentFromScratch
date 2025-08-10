@@ -6,6 +6,7 @@ from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.output_parsers import PydanticOutputParser
 from langchain.agents import create_tool_calling_agent, AgentExecutor
 from tools import get_tools
+import re
 
 load_dotenv()
 
@@ -52,7 +53,6 @@ def run_agent(query: str):
     try:
         output = raw_response.get("output")
         if isinstance(output, list):
-            # The agent can sometimes return a list of responses, so we take the first one.
             output = output[0].get("text", "")
 
         # The response can sometimes be wrapped in ```json ... ```, so we extract it.
