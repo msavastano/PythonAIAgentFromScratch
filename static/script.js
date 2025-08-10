@@ -2,13 +2,12 @@ document.getElementById('research-form').addEventListener('submit', async functi
     event.preventDefault();
     const query = document.getElementById('query').value;
     const responseDiv = document.getElementById('response');
-    const toolsSection = document.getElementById('tools-section');
     const toolsOutputDiv = document.getElementById('tools-output');
     const toggleToolsBtn = document.getElementById('toggle-tools');
 
     // Reset UI for new request
     responseDiv.innerHTML = 'Researching...';
-    toolsSection.classList.add('hidden');
+    toggleToolsBtn.classList.add('hidden');
     toolsOutputDiv.innerHTML = '';
     toolsOutputDiv.classList.add('hidden');
     toggleToolsBtn.textContent = 'Show Tools Used';
@@ -47,7 +46,7 @@ document.getElementById('research-form').addEventListener('submit', async functi
             }
             toolsHtml += '</dl>';
             toolsOutputDiv.innerHTML = toolsHtml;
-            toolsSection.classList.remove('hidden'); // Show the whole tools section
+            toggleToolsBtn.classList.remove('hidden'); // Show the button
         }
 
     } catch (error) {
