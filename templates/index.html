@@ -13,6 +13,13 @@
         <button type="submit">Research</button>
     </form>
     <div id="response"></div>
+
+    <div id="tools-section" class="hidden">
+      <button id="toggle-tools">Show Tools Used</button>
+      <div id="tools-output" class="hidden">
+        <!-- Tool output will be rendered here by JavaScript -->
+      </div>
+    </div>
     <script src="{{ url_for('static', filename='script.js') }}"></script>
 </body>
 </html>

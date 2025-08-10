@@ -22,4 +22,46 @@ button {
 #response {
     border: 1px solid #ccc;
     padding: 1em;
+    margin-bottom: 1em;
+}
+
+.hidden {
+    display: none;
+}
+
+#tools-section {
+    margin-top: 2em;
+}
+
+#toggle-tools {
+    margin-bottom: 1em;
+}
+
+#tools-output {
+    border: 1px solid #ccc;
+    padding: 1em;
+    background-color: #f9f9f9;
+}
+
+#tools-output dl {
+    margin: 0;
+    padding: 0;
+}
+
+#tools-output dt {
+    font-weight: bold;
+    margin-top: 1em;
+}
+
+#tools-output dd {
+    margin-left: 0;
+    margin-bottom: 1em;
+}
+
+#tools-output pre {
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    background-color: #eee;
+    padding: 0.5em;
+    border-radius: 4px;
 }
