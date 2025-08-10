@@ -45,3 +45,9 @@ wiki_tool = Tool(
     description="Search Wikipedia for information about a topic"
 )
 
+from langchain_community.tools.arxiv.tool import ArxivQueryRun
+from langchain_experimental.tools import PythonREPLTool
+
+arxiv_tool = ArxivQueryRun()
+python_repl_tool = PythonREPLTool()
+

@@ -1,10 +1,12 @@
-langchain 
-wikipedia 
-langchain-community 
+langchain
+langchain-community
 langchain-openai
 langchain-anthropic
 python-dotenv
 pydantic
 duckduckgo-search
-dotenv
 Flask
+arxiv
+langchain-experimental
+wikipedia
+lark
