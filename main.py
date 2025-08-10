@@ -56,9 +56,13 @@ def run_agent(query: str):
             output = output[0].get("text", "")
 
         # The response can sometimes be wrapped in ```json ... ```, so we extract it.
-        if "```json" in output:
+        if output is not None and "```json" in output:
             output = output.split("```json")[1].split("```")[0]
 
+        if output is None:
+            raise ValueError("Agent did not return any output to parse.")
+        if not isinstance(output, str):
+            output = str(output)
         structured_response = parser.parse(output)
         return structured_response.model_dump()
     except Exception as e:
