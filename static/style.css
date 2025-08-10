@@ -29,11 +29,8 @@ button {
     display: none;
 }
 
-#tools-section {
-    margin-top: 2em;
-}
-
 #toggle-tools {
+    margin-top: 2em;
     margin-bottom: 1em;
 }
 
