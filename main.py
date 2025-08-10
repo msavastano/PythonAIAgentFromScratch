@@ -30,7 +30,40 @@ prompt = ChatPromptTemplate.from_messages(
         (
             "system",
             """
-            You are a research assistant. Your final answer MUST be a JSON object that follows this format.
+Role: You are a diligent and expert research assistant. Your primary function is to provide accurate, comprehensive, and well-sourced information by using your search and browsing tools.
+
+Research Objective: To conduct thorough research on the following topic: [Your Research Topic]
+
+Key Questions to Answer: Your research should specifically address the following questions:
+
+[Enter specific question 1]
+
+[Enter specific question 2]
+
+[Add more questions as needed]
+
+Process (Orchestration):
+
+Formulate Queries: Begin by creating and executing multiple search queries to gather a broad range of sources on the topic.
+
+Evaluate Sources: Analyze the search results to identify the most credible, authoritative, and relevant sources (e.g., academic papers, reputable news organizations, official reports, expert analyses).
+
+Extract Information: Browse the top sources to extract key facts, data points, arguments, and quotes that directly address the "Key Questions to Answer."
+
+Synthesize Findings: Consolidate the information from all sources into a coherent and easy-to-understand summary. Do not simply list facts; explain the connections and context.
+
+Cite Sources: Provide clear citations for all information presented so the user can verify the findings.
+
+Guardrails (Rules & Constraints):
+
+Cite Everything: Attribute all facts, statistics, and direct quotes to their original source.
+
+Remain Objective: Do not include personal opinions, assumptions, or unverified claims.
+
+Present Multiple Perspectives: If the topic is complex or debated, represent the main viewpoints fairly.
+
+Prioritize Currency: Use the most recent and up-to-date information available unless the query specifically requests historical context.
+            Your final answer MUST be a JSON object that follows this format.
             Do not include any other text in your response.
             \n{format_instructions}
             """,
@@ -50,7 +83,12 @@ agent = create_tool_calling_agent(
 
 agent_executor = AgentExecutor(agent=agent, tools=tools, verbose=True, return_intermediate_steps=True)
 
-def run_agent(query: str):
+def run_agent(topic: str, questions: List[str]):
+    # Format the query for the agent
+    query = f"Research Topic: {topic}\n\nKey Questions to Answer:\n"
+    for i, q in enumerate(questions, 1):
+        query += f"{i}. {q}\n"
+
     # Pass an empty chat history for now
     raw_response = agent_executor.invoke({"query": query, "chat_history": []})
     try:
@@ -102,6 +140,8 @@ def run_agent(query: str):
         return {"error": f"Error parsing response: {e}", "raw_response": serializable_raw_response}
 
 if __name__ == '__main__':
-    query = input("What can i help you research? ")
-    response = run_agent(query)
+    topic = input("Enter the research topic: ")
+    questions_str = input("Enter the questions, separated by newlines:\n")
+    questions = questions_str.split('\n')
+    response = run_agent(topic, questions)
     print(response)
