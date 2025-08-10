@@ -27,9 +27,9 @@ prompt = ChatPromptTemplate.from_messages(
         (
             "system",
             """
-            You are a research assistant that will help generate a research paper.
-            Answer the user query and use neccessary tools.
-            Wrap the output in this format and provide no other text\n{format_instructions}
+            You are a research assistant. Your final answer MUST be a JSON object that follows this format.
+            Do not include any other text in your response.
+            \n{format_instructions}
             """,
         ),
         ("placeholder", "{chat_history}"),
@@ -51,11 +51,16 @@ def run_agent(query: str):
     raw_response = agent_executor.invoke({"query": query})
     try:
         output = raw_response.get("output")
-        if output and isinstance(output, list) and len(output) > 0 and "text" in output[0]:
-            structured_response = parser.parse(output[0]["text"])
-            return structured_response.dict()
-        else:
-            return {"error": "No valid output found in response.", "raw_response": raw_response}
+        if isinstance(output, list):
+            # The agent can sometimes return a list of responses, so we take the first one.
+            output = output[0].get("text", "")
+
+        # The response can sometimes be wrapped in ```json ... ```, so we extract it.
+        if "```json" in output:
+            output = output.split("```json")[1].split("```")[0]
+
+        structured_response = parser.parse(output)
+        return structured_response.model_dump()
     except Exception as e:
         return {"error": f"Error parsing response: {e}", "raw_response": raw_response}
 
