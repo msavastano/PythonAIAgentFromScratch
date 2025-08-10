@@ -52,13 +52,7 @@ Your entire response must be only the JSON object, starting with `{` and ending 
 \n{format_instructions}""",
         ),
         ("placeholder", "{chat_history}"),
-        (
-            "human",
-            """Research Objective: To conduct thorough research on the following topic: {topic}
-
-Key Questions to Answer:
-{questions}""",
-        ),
+        ("human", "{input}"),
         ("placeholder", "{agent_scratchpad}"),
     ]
 ).partial(format_instructions=parser.get_format_instructions())
@@ -76,10 +70,15 @@ def run_agent(topic: str, questions: List[str]):
     # Format the questions into a numbered list string
     formatted_questions = "\n".join([f"{i}. {q}" for i, q in enumerate(questions, 1)])
 
-    # Pass the topic and formatted questions to the agent
+    # Combine topic and questions into a single input string for the agent
+    input_text = f"""Research Objective: To conduct thorough research on the following topic: {topic}
+
+Key Questions to Answer:
+{formatted_questions}"""
+
+    # Pass the combined input to the agent
     raw_response = agent_executor.invoke({
-        "topic": topic,
-        "questions": formatted_questions,
+        "input": input_text,
         "chat_history": []
     })
     try:
