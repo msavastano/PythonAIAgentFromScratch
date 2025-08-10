@@ -16,7 +16,10 @@ class ResearchResponse(BaseModel):
     tools_used: list[str]
 
 
-llm = ChatAnthropic(model_name="claude-3-5-sonnet-20241022", timeout=60, stop=None)
+# llm = ChatAnthropic(model_name="claude-3-5-sonnet-20241022", timeout=60, stop=None)
+llm = ChatAnthropic(model_name="claude-3-haiku-20240307", timeout=60, stop=None)
+
+
 parser = PydanticOutputParser(pydantic_object=ResearchResponse)
 
 prompt = ChatPromptTemplate.from_messages(

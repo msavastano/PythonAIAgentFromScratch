@@ -1,4 +1,4 @@
-from langchain_community.tools import WikipediaQueryRun, DuckDuckGoSearchRun
+from langchain_community.tools import DuckDuckGoSearchRun
 from langchain_community.utilities import WikipediaAPIWrapper
 from langchain.tools import Tool
 from datetime import datetime
@@ -25,6 +25,23 @@ search_tool = Tool(
     description="Search the web for information",
 )
 
-api_wrapper = WikipediaAPIWrapper(top_k_results=1, doc_content_chars_max=100)
-wiki_tool = WikipediaQueryRun(api_wrapper=api_wrapper)
+from langchain_community.tools.wikipedia.tool import WikipediaQueryRun
+from langchain_community.utilities.wikipedia import WikipediaAPIWrapper
+import wikipedia
+
+# Create Wikipedia tool
+wikipedia_api = WikipediaAPIWrapper(
+    wiki_client=wikipedia,
+    top_k_results=3,
+    lang="en",
+    load_all_available_meta=False,
+    doc_content_chars_max=4000
+)
+wikipedia_query = WikipediaQueryRun(api_wrapper=wikipedia_api)
+
+wiki_tool = Tool(
+    name="wikipedia",
+    func=wikipedia_query.run,
+    description="Search Wikipedia for information about a topic"
+)
 
