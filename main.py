@@ -1,5 +1,6 @@
 from dotenv import load_dotenv
 from pydantic import BaseModel
+from typing import List
 # from langchain_openai import ChatOpenAI
 from langchain_anthropic import ChatAnthropic
 from langchain_core.prompts import ChatPromptTemplate
@@ -9,11 +10,11 @@ from tools import get_tools
 import re
 
 load_dotenv()
-
 class ResearchResponse(BaseModel):
     topic: str
     summary: str
-    sources: list[str]
+    sources: List[str]
+    tools_used: List[str]
     tools_used: list[str]
 
 
