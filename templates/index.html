@@ -9,7 +9,8 @@
 <body>
     <h1>Research Agent</h1>
     <form id="research-form">
-        <input type="text" id="query" name="query" placeholder="Enter your research query">
+        <input type="text" id="topic" name="topic" placeholder="Your Research Topic" required>
+        <textarea id="questions" name="questions" placeholder="[Enter specific question 1]&#x0a;[Enter specific question 2]&#x0a;[Add more questions as needed]" rows="4" required></textarea>
         <button type="submit">Research</button>
     </form>
     <div id="response"></div>

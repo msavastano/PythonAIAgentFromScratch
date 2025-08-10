@@ -10,11 +10,12 @@ def index():
 @app.route('/research', methods=['POST'])
 def research():
     data = request.get_json()
-    query = data.get('query')
-    if not query:
-        return jsonify({'error': 'Query not provided'}), 400
+    topic = data.get('topic')
+    questions = data.get('questions')
+    if not topic or not questions:
+        return jsonify({'error': 'Topic and questions are required'}), 400
 
-    response = run_agent(query)
+    response = run_agent(topic, questions)
     return jsonify(response)
 
 if __name__ == '__main__':

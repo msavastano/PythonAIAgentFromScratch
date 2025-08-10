@@ -1,6 +1,7 @@
 document.getElementById('research-form').addEventListener('submit', async function(event) {
     event.preventDefault();
-    const query = document.getElementById('query').value;
+    const topic = document.getElementById('topic').value;
+    const questions = document.getElementById('questions').value.split('\n').filter(q => q.trim() !== '');
     const responseDiv = document.getElementById('response');
     const toolsOutputDiv = document.getElementById('tools-output');
     const toggleToolsBtn = document.getElementById('toggle-tools');
@@ -18,7 +19,7 @@ document.getElementById('research-form').addEventListener('submit', async functi
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({ query: query })
+            body: JSON.stringify({ topic: topic, questions: questions })
         });
 
         const data = await response.json();
