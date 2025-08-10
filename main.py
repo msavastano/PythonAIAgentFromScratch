@@ -46,7 +46,9 @@ Guardrails (Rules & Constraints):
 -   **Present Multiple Perspectives:** If the topic is complex or debated, represent the main viewpoints fairly.
 -   **Prioritize Currency:** Use the most recent and up-to-date information available unless the query specifically requests historical context.
 
-Your final answer MUST be a JSON object that follows this format. Do not include any other text in your response.
+Your final answer MUST be a JSON object that follows this format.
+Do not include any other text, conversation, or explanation in your response.
+Your entire response must be only the JSON object, starting with `{` and ending with `}`.
 \n{format_instructions}""",
         ),
         ("placeholder", "{chat_history}"),
