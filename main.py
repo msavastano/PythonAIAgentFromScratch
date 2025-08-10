@@ -48,7 +48,7 @@ Guardrails (Rules & Constraints):
 
 Your final answer MUST be a JSON object that follows this format.
 Do not include any other text, conversation, or explanation in your response.
-Your entire response must be only the JSON object, starting with `{` and ending with `}`.
+Your entire response must be only the JSON object, starting with `{{` and ending with `}}`.
 \n{format_instructions}""",
         ),
         ("placeholder", "{chat_history}"),
